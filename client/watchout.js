@@ -10,38 +10,6 @@ board = d3.select('body').append('svg')
         .attr('width',options.width)
         .attr('height',options.width)
 
-var Asteroid = function(id,r, cx, cy, color){
-  this.id = id;
-  this.r = r;
-  this.cx = cx;
-  this.cy = cy;
-  this.color = color;
-}
-
-
-Asteroid.prototype.move = function(x,y,r,w){
-  x = 100+r*Math.cos(w*time);
-  y = 100+r*Math.sin(w*time);
-  d3.select('circle').transition()
-    .duration(options.speed)
-    .attr('cx',x)
-    .attr('cy',y); 
-}
-var Player = function(id,r,cx,cy,color,rx,ry){
-  // copy props
-  Asteroid.apply(this, arguments);
-  this.rx = rx;
-  this.ry = ry;
-// <svg height="250" width="500">
-  // <polygon points="220,10 300,210 170,250 123,234" style="fill:lime;stroke:purple;stroke-width:1" />
-// </svg>
-};
-
-Player.prototype = Object.create(Asteroid.prototype);
-Player.prototype.constructor = Player;
-
-// d3.select('svg').select().
-
 var newPlayer = new Player('player',10,300,300,'green',20,10);
 
 d3.select('svg').selectAll('circle')
@@ -54,14 +22,12 @@ d3.select('svg').selectAll('circle')
   .attr('cy',function(d){return d.cy})
   .attr('fill',function(d){return d.color});
 
-// var playerSelection = d3.select(".player")
 var drag = d3.behavior.drag().on('drag',function(d){
   var x =  d.cx + d3.event.dx;
   var y = d.cy + d3.event.dy;
   newPlayer.cx = x
   newPlayer.cy = y
   d3.select(this).attr("cx",x).attr("cy",y);
-  //console.log(x,' ',y)
 })
 
 newPlayerSelect = d3.select('svg').selectAll('ellipse')
