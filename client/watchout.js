@@ -27,9 +27,11 @@ Asteroid.prototype.move = function(x,y,r,w){
     .attr('cx',x)
     .attr('cy',y); 
 }
-var Player = function(id,r,cx,cy,color){
+var Player = function(id,r,cx,cy,color,rx,ry){
   // copy props
   Asteroid.apply(this, arguments);
+  this.rx = rx;
+  this.ry = ry;
 // <svg height="250" width="500">
   // <polygon points="220,10 300,210 170,250 123,234" style="fill:lime;stroke:purple;stroke-width:1" />
 // </svg>
@@ -38,13 +40,16 @@ var Player = function(id,r,cx,cy,color){
 Player.prototype = Object.create(Asteroid.prototype);
 Player.prototype.constructor = Player;
 
-var newPlayer = new Player('player',10,300,300,'green');
+// d3.select('svg').select().
 
- d3.select('svg').selectAll('circle')
+var newPlayer = new Player('player',10,300,300,'green',20,10);
+
+d3.select('svg').selectAll('circle')
   .data([newPlayer], function(d){return d.id})
-  .enter().append('svg:circle')
+  .enter().append('svg:ellipse')
   .attr('class','Player')
-  .attr('r',function(d){return d.r})
+  .attr('rx',function(d){return d.rx})
+  .attr('ry',function(d){return d.ry})
   .attr('cx',function(d){return d.cx})
   .attr('cy',function(d){return d.cy})
   .attr('fill',function(d){return d.color});
@@ -59,7 +64,7 @@ var drag = d3.behavior.drag().on('drag',function(d){
   //console.log(x,' ',y)
 })
 
-newPlayerSelect = d3.select('svg').selectAll('circle')
+newPlayerSelect = d3.select('svg').selectAll('ellipse')
   .data([newPlayer], function(d){return d.id})
   .attr('class','Player')
   .attr('r',function(d){return d.r})
@@ -109,7 +114,7 @@ var moveCircles = function(data){
 
 
 //initialize our asteroids
-var asteroids = randomAsteroids(1);
+var asteroids = randomAsteroids(50);
  
 initCircles(asteroids);
 
@@ -120,15 +125,16 @@ var checkCollision = function(astroObj){
   //cecjkk
   for (var i = 0; i < asteroids.length; i++) {
     var refAstro = asteroids[i];
-    var x = asteroids[i].cx
-    var y = asteroids[i].cy
-    var dist = Math.pow(Math.pow(astroObj.cx - x,2)+Math.pow(astroObj.cx - y,2),0.5);
+    var x = refAstro.cx
+    var y = refAstro.cy
+    var dist = Math.sqrt(Math.pow(astroObj.cx - x,2)+Math.pow(astroObj.cy - y,2));
     console.log(dist)
     if (dist < astroObj.r + refAstro.r){
       collisions++;
       d3.select('.collisions').select('span').text(collisions);
       if(points > highScore){
-        d3.select('.high').select('span').text(points);
+        highScore = points;
+        d3.select('.high').select('span').text(highScore);
       }
       points = 0;
       d3.select('.current').select('span').text(points);

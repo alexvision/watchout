@@ -3,3 +3,15 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+.Player {
+    position: fixed;
+    -webkit-transform-origin:50% 50%; 
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 4000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
